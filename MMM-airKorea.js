@@ -1,5 +1,8 @@
 Module.register("MMM-airKorea", {
-	defaults: {},
+	defaults: {
+		// updateInterval: 1000 * 60 * 10, // 10 minutes
+		updateInterval: 1000 * 60,
+	},
 	start: function () {
 		Log.log("Starting module: " + this.name);
 		this.airQuality_recv = {};
@@ -7,10 +10,14 @@ Module.register("MMM-airKorea", {
 	getStyles: function () {
 		return ["MMM-airKorea.css"];
 	},
+	getScripts: function () {
+		return ["moment.js"];
+	},
 	getDom: function() {
 		var airKoreaContainer = document.createElement('div');
 		
 		if (this.airQuality_recv.hasOwnProperty('Error')){
+			// airKoreaContainer.innerHTML = 'ERROR! <br>' + this.airQuality_recv['Error'];
 			airKoreaContainer.innerHTML = 'ERROR!';
 		} else {
 			var dataInfo = document.createElement('p');
@@ -99,21 +106,57 @@ Module.register("MMM-airKorea", {
 		return airKoreaContainer;
 	},
 	notificationReceived: function(notification, payload) {
+		var self = this;
 		switch(notification){
 			case 'DOM_OBJECTS_CREATED':
-				this.airQualityRequest(this.config.key, this.config.stationName, 'json');
+				self.airQualityRequest(self.config.key, self.config.stationName, 'json');
+				setInterval(function() {
+					// if (moment(this.airQuality_recv['dataTime']).fromNow)
+					// Log.log(moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').fromNow());
+					// if (moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').fromNow() === '1 hours ago'){
+					// 	self.airQualityRequest(self.config.key, self.config.stationName, 'json');
+					// }
+					
+					if (self.airQuality_recv.hasOwnProperty('Error')) {
+						self.airQualityRequest(self.config.key, self.config.stationName, 'json');
+						Log.log('updated');
+					}else{
+						// moment().valueOf() returns unix timestamp(second value)
+						var elapsedTime = moment().valueOf() - moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').valueOf()
+						Log.log('timeNow: ' + moment().valueOf());
+						Log.log('dataTime: ' + moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm'));
+						Log.log('elapsedTime: ' + elapsedTime);
+
+						if (elapsedTime > 1000 * 60 * 60 /* 1 hour */){
+							self.airQualityRequest(self.config.key, self.config.stationName, 'json');
+							Log.log('updated');
+						}	
+					}
+				}, self.config.updateInterval);
 		}
 	},
 	socketNotificationReceived: function(notification, payload) {
 		switch(notification){
 			case 'AIRQUALITY_RECV':
-				if (payload['response']['header']['resultCode'] === "00") {
-					this.airQuality_recv = payload['response']['body']['items'][0];
-					Log.log(payload);
+				// if (typeof payload != 'object'){
+				// 	Log.log('Error in fetching data');
+				// 	this.airQuality_recv['Error'] = 'Error';
+				// } else if (payload['response']['header']['resultCode'] === "00") {
+				// 	this.airQuality_recv = payload['response']['body']['items'][0];
+				// 	Log.log(typeof payload);
+				// 	Log.log(this.airQuality_recv);
+				// } else {
+				// 	Log.log('Error in fetching data');
+				// 	this.airQuality_recv['Error'] = 'Error';
+				// }
+				try {
+					this.airQuality_recv = payload['response']['body']['items'][0]
 					Log.log(this.airQuality_recv);
-				} else {
-					Log.log('Error in fetching Data');
-					this.airQuality_recv = null;
+				} catch (e) {
+					Log.log('Error in fetching data: ' + e);
+					if (Object.keys(this.airQuality_recv).length <= 1){
+						this.airQuality_recv['Error'] = e;	
+					}
 				}
 				
 				this.updateDom();
@@ -124,7 +167,10 @@ Module.register("MMM-airKorea", {
 		this.sendSocketNotification('AIRQUALITY_REQ', [key, stationName, returnType]);
 	},
 	setColorByKhaiGrade: function (elem, grade){
-		if (grade === '1') {
+		if (grade === null){
+			// 점검및교정 or 점검중. 회색
+			elem.style.color = 'grey';
+		}else if (grade === '1') {
 			// 대기질 상태 좋음
 			elem.style.color = '#32C8FF';
 		}else if (grade === '2') {

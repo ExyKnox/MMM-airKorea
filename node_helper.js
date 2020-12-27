@@ -13,7 +13,6 @@ module.exports = NodeHelper.create({
 	},
 	async getAirQuality(key, stationName, returnType){
 		// https://stackoverflow.com/questions/12460378/how-to-get-json-from-url-in-javascript (14 참고)
-		// node_helper로 빼야 하나? async가 안 되는거 같은데
 		var url = 'http://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty'
 		var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + key; /*Service Key*/
 		queryParams += '&' + encodeURIComponent('returnType') + '=' + encodeURIComponent(returnType); /**/
