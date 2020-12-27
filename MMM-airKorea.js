@@ -121,13 +121,13 @@ Module.register("MMM-airKorea", {
 						self.airQualityRequest(self.config.key, self.config.stationName, 'json');
 						Log.log('updated');
 					}else{
-						// moment().valueOf() returns unix timestamp(second value)
-						var elapsedTime = moment().valueOf() - moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').valueOf()
-						Log.log('timeNow: ' + moment().valueOf());
-						Log.log('dataTime: ' + moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm'));
+						// moment().unix() returns unix timestamp(second value)
+						var elapsedTime = moment().unix() - moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').unix()
+						Log.log('timeNow: ' + moment().unix());
+						Log.log('dataTime: ' + moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').unix());
 						Log.log('elapsedTime: ' + elapsedTime);
 
-						if (elapsedTime > 1000 * 60 * 60 /* 1 hour */){
+						if (elapsedTime > 60 * 60 /* 1 hour */){
 							self.airQualityRequest(self.config.key, self.config.stationName, 'json');
 							Log.log('updated');
 						}	
