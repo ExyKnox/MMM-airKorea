@@ -111,25 +111,22 @@ Module.register("MMM-airKorea", {
 			case 'DOM_OBJECTS_CREATED':
 				self.airQualityRequest(self.config.key, self.config.stationName, 'json');
 				setInterval(function() {
-					// if (moment(this.airQuality_recv['dataTime']).fromNow)
-					// Log.log(moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').fromNow());
-					// if (moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').fromNow() === '1 hours ago'){
-					// 	self.airQualityRequest(self.config.key, self.config.stationName, 'json');
-					// }
-					
 					if (self.airQuality_recv.hasOwnProperty('Error')) {
 						self.airQualityRequest(self.config.key, self.config.stationName, 'json');
-						Log.log('updated');
+						Log.log('Requested new air quality data');
 					}else{
 						// moment().unix() returns unix timestamp(second value)
 						var elapsedTime = moment().unix() - moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').unix()
+						
+						/* debug
 						Log.log('timeNow: ' + moment().unix());
 						Log.log('dataTime: ' + moment(self.airQuality_recv['dataTime'], 'YYYY-MM-DD HH:mm').unix());
 						Log.log('elapsedTime: ' + elapsedTime);
+						*/
 
 						if (elapsedTime > 60 * 60 /* 1 hour */){
 							self.airQualityRequest(self.config.key, self.config.stationName, 'json');
-							Log.log('updated');
+							Log.log('Requested new air quality data: 1 hour elapsed from previous data');
 						}	
 					}
 				}, self.config.updateInterval);
@@ -138,17 +135,6 @@ Module.register("MMM-airKorea", {
 	socketNotificationReceived: function(notification, payload) {
 		switch(notification){
 			case 'AIRQUALITY_RECV':
-				// if (typeof payload != 'object'){
-				// 	Log.log('Error in fetching data');
-				// 	this.airQuality_recv['Error'] = 'Error';
-				// } else if (payload['response']['header']['resultCode'] === "00") {
-				// 	this.airQuality_recv = payload['response']['body']['items'][0];
-				// 	Log.log(typeof payload);
-				// 	Log.log(this.airQuality_recv);
-				// } else {
-				// 	Log.log('Error in fetching data');
-				// 	this.airQuality_recv['Error'] = 'Error';
-				// }
 				try {
 					this.airQuality_recv = payload['response']['body']['items'][0]
 					Log.log(this.airQuality_recv);
