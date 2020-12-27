@@ -158,7 +158,7 @@ Module.register("MMM-airKorea", {
 			elem.style.color = 'grey';
 		}else if (grade === '1') {
 			// 대기질 상태 좋음
-			elem.style.color = '#32C8FF';
+			elem.style.color = '#0A64FF';
 		}else if (grade === '2') {
 			// 대기질 상태 보통
 			elem.style.color = '#00FF00';
