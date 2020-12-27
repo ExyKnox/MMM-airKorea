@@ -13,7 +13,7 @@ Module.register("MMM-airKorea", {
 		if (this.airQuality_recv.hasOwnProperty('Error')){
 			airKoreaContainer.innerHTML = 'ERROR!';
 		} else {
-			var dataTime = document.createElement('p');
+			var dataInfo = document.createElement('p');
 			var khaiGrade = document.createElement('p'); /*통합대기환경지수*/
 			var pm25 = document.createElement('p');
 			var pm10 = document.createElement('p');
@@ -23,19 +23,21 @@ Module.register("MMM-airKorea", {
 			var co = document.createElement('p');
 
 			airKoreaContainer.id = 'airKoreaContainer';
-			dataTime.id = 'dataTime'
+			dataInfo.id = 'dataInfo'
 			khaiGrade.id = 'khaiGrade'
-			for (let i in [pm10, pm25, o3, no2, so2, co]) {
-				i.class = 'airElement';
+			for (let i of [pm10, pm25, o3, no2, so2, co]) {
+				i.className = 'airElement';
 			}
 
-			//dataTime
-			dataTime.innerHTML = this.airQuality_recv['dataTime'] + ' 기준';
+			//dataInfo
+			dataInfo.innerHTML = this.config.stationName + ', ' + this.airQuality_recv['dataTime'] + ' 기준';
 
 			//통합대기환경지수
 			var khaiGradeStatus = document.createElement('span');
+			khaiGradeStatus.id = 'khaiGradeStatus';
 			this.setColorByKhaiGrade(khaiGradeStatus, this.airQuality_recv['khaiGrade']);
-			khaiGrade.innerHTML = '현재 대기질 등급: '
+			khaiGrade.innerHTML = '현재 대기질 등급'
+			khaiGrade.append(document.createElement('p'));
 			if (this.airQuality_recv['khaiGrade'] === '1') {
 				// 대기질 상태 좋음
 				khaiGradeStatus.innerHTML = '좋음(' + this.airQuality_recv['khaiValue'] + ')';
@@ -87,7 +89,7 @@ Module.register("MMM-airKorea", {
 			coValue.innerHTML = this.airQuality_recv['coValue'] + ' ppm';
 			co.append(coValue);
 
-			for (let i in [dataTime, khaiGrade, pm25, pm10, o3, no2, so2, co]) {
+			for (let i of [dataInfo, khaiGrade, pm25, pm10, o3, no2, so2, co]) {
 				airKoreaContainer.append(i);
 			}	
 		}
@@ -124,16 +126,16 @@ Module.register("MMM-airKorea", {
 	setColorByKhaiGrade: function (elem, grade){
 		if (grade === '1') {
 			// 대기질 상태 좋음
-			elem.style.color = '0000FF';
+			elem.style.color = '#32C8FF';
 		}else if (grade === '2') {
 			// 대기질 상태 보통
-			elem.style.color = '00FF00';
+			elem.style.color = '#00FF00';
 		}else if (grade === '3') {
 			// 대기질 상태 나쁨
-			elem.style.color = 'FFFF00';
+			elem.style.color = '#FFFF00';
 		}else if (grade === '4') {
 			// 대기질 상태 매우나쁨
-			elem.style.color = 'FF0000';
+			elem.style.color = '#FF0000';
 		}
 	}
 })
