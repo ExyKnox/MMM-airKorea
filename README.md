@@ -9,7 +9,7 @@ https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15073861
 ## Embedding MMM-airKorea
 ``` JS
 modules: [
-    {
+	{
 		module: "MMM-airKorea",
 		position: "top_right",
 		config: {
