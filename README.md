@@ -1,7 +1,7 @@
 # MMM-airKorea
 MM2 module displays air pollution status from airKorea   
 
-![MMM-airKorea.png](/MMM-airKorea.png)   
+![MMM-airKorea.png](/MMM-airKorea.PNG)   
 
 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15073861   
 한국환경공단 airKorea에서 대기오염 정보를 받아와 표시하는 Magicmirror2 모듈입니다.   
