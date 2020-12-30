@@ -25,7 +25,6 @@ modules: [
 
 |Option|Description                          |
 |------|-------------------------------------|
-<<<<<<< HEAD
 |**key**|공공데이터포털의 인증키를 입력합니다.|
 |**stationName**|airKorea의 측정소 이름을 입력합니다.<br />측정소 이름은 [에어코리아](https://www.airkorea.or.kr/index) **측정소 검색** 버튼에서 검색하시면 됩니다.|
 |**updateInterval**|최신 대기질 정보가 있는지 확인하는 시간을 설정합니다.<br />**단위**: ms **Type**: <code>Number</code>|
