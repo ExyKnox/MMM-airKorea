@@ -17,7 +17,6 @@ Module.register("MMM-airKorea", {
 		var airKoreaContainer = document.createElement('div');
 		
 		if (this.airQuality_recv.hasOwnProperty('Error')){
-			// airKoreaContainer.innerHTML = 'ERROR! <br>' + this.airQuality_recv['Error'];
 			airKoreaContainer.innerHTML = 'ERROR!';
 		} else {
 			var dataInfo = document.createElement('p');
@@ -101,7 +100,7 @@ Module.register("MMM-airKorea", {
 			}	
 		}
 		
-		Log.log(airKoreaContainer);
+		// Log.log(airKoreaContainer);
 		
 		return airKoreaContainer;
 	},
@@ -149,7 +148,7 @@ Module.register("MMM-airKorea", {
 		}
 	},
 	airQualityRequest: function(key, stationName, returnType){
-		Log.log([key, stationName, returnType]);
+		// Log.log([key, stationName, returnType]);
 		this.sendSocketNotification('AIRQUALITY_REQ', [key, stationName, returnType]);
 	},
 	setColorByKhaiGrade: function (elem, grade){
